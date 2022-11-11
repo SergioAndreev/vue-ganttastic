@@ -2,7 +2,7 @@
   <g-gantt-chart
     :chart-start="chartStart"
     :chart-end="chartEnd"
-    precision="month"
+    :precision="precision"
     :row-height="40"
     grid
     width="100%"
@@ -25,16 +25,27 @@
 
   <button type="button" @click="addBar()">Add bar</button>
   <button type="button" @click="deleteBar()">Delete bar</button>
+  <div>
+    <button type="button" @click="changeTimeHour()">Час</button>
+  </div>
+  <div>
+    <button type="button" @click="changeTimeDay()">День</button>
+  </div>
+  <div>
+    <button type="button" @click="changeTimeMonth()">Месяц</button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue"
 import type { GanttBarObject } from "./types.js"
+import * as dayjs from 'dayjs'
 
-const chartStart = ref("21.03.2021 12:00")
-const chartEnd = ref("15.07.2021 12:00")
+
+let chartStart = ref("1.12.2021 12:00")
+let chartEnd = ref("31.12.2021 12:00")
 const format = ref("DD.MM.YYYY HH:mm")
-
+let precision = ref ("day")
 const bars1 = ref<GanttBarObject[]>([
   {
     beginDate: "24.04.2021 13:00",
@@ -92,8 +103,8 @@ const addBar = () => {
     return
   }
   const bar = {
-    beginDate: "26.02.2021 00:00",
-    endDate: "26.03.2021 02:00",
+    beginDate: "26.03.2021 00:00",
+    endDate: "26.03.2021 12:00",
     ganttBarConfig: {
       id: "test1",
       hasHandles: true,
@@ -105,6 +116,25 @@ const addBar = () => {
     }
   }
   bars1.value.push(bar)
+}
+
+const changeTimeHour = () => {
+  precision.value = "hour"
+  chartStart.value = "30.12.2021 00:00"
+  chartEnd.value = "31.12.2021 23:59"
+}
+
+const changeTimeDay = () => {
+  precision.value = "day"
+  chartStart.value = "01.12.2021 00:00"
+  chartEnd.value = "31.12.2021 23:50"
+}
+
+const changeTimeMonth = () => {
+  dayjs.locale('ru')
+  precision.value = "month"
+  chartStart.value = "01.01.2021 00:00"
+  chartEnd.value = "31.12.2021 12:00"
 }
 
 const deleteBar = () => {
@@ -153,4 +183,6 @@ const onDragendBar = (
 const onContextmenuBar = (bar: GanttBarObject, e: MouseEvent, datetime?: string) => {
   console.log("contextmenu-bar", bar, e, datetime)
 }
+
 </script>
+
